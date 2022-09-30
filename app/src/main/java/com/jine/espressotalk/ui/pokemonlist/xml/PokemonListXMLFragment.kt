@@ -22,7 +22,7 @@ class PokemonListXMLFragment : Fragment() {
     private val viewModel: PokemonListViewModel by viewModels(ownerProducer = { requireActivity() })
     private lateinit var binding: FragmentPokemonListBinding
     private val pokemonAdapter = PokemonAdapter(onPokemonClicked = { pokemonNumber ->
-        viewModel.makeAsFavorite(pokemonNumber)
+        viewModel.toggleFavorite(pokemonNumber)
     })
 
     override fun onCreate(savedInstanceState: Bundle?) {

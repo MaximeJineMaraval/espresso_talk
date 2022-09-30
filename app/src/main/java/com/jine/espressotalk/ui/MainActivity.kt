@@ -33,9 +33,13 @@ class MainActivity : AppCompatActivity() {
             title = when (destination.id) {
                 R.id.mainFragment -> "Home"
                 R.id.pokemonListXMLFragment -> "XML List"
+                R.id.pokemonListComposeFragment -> "Compose List"
                 else -> ""
             }
-            supportActionBar?.setDisplayHomeAsUpEnabled(destination.id == R.id.pokemonListXMLFragment)
+            supportActionBar?.setDisplayHomeAsUpEnabled(
+                destination.id == R.id.pokemonListXMLFragment
+                        || destination.id == R.id.pokemonListComposeFragment
+            )
         }
     }
 

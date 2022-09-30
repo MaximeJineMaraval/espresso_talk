@@ -1,5 +1,6 @@
 package com.jine.espressotalk.ui.pokemonlist
 
+import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -18,7 +19,7 @@ class PokemonListViewModel : ViewModel() {
     private var finalList: List<PokemonModel> = emptyList()
         set(value) {
             field = value
-            _screenState.postValue(PokemonListState.Success(value))
+            _screenState.postValue(PokemonListState.Success(value.toMutableStateList()))
         }
     private var currentSearchText: String = ""
     private var showOnlyFavorite: Boolean = false
@@ -37,7 +38,7 @@ class PokemonListViewModel : ViewModel() {
         updateLists()
     }
 
-    fun makeAsFavorite(pokemonNumber: Int) {
+    fun toggleFavorite(pokemonNumber: Int) {
         rawList = rawList.apply {
             find { it.number == pokemonNumber }?.toggleFavorite()
         }

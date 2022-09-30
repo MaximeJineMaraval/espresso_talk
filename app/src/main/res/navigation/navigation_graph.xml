@@ -11,9 +11,16 @@
         <action
             android:id="@+id/action_mainFragment_to_pokemonListXMLFragment2"
             app:destination="@id/pokemonListXMLFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_pokemonListComposeFragment"
+            app:destination="@id/pokemonListComposeFragment" />
     </fragment>
     <fragment
         android:id="@+id/pokemonListXMLFragment"
         android:name="com.jine.espressotalk.ui.pokemonlist.xml.PokemonListXMLFragment"
         android:label="PokemonListXMLFragment" />
+    <fragment
+        android:id="@+id/pokemonListComposeFragment"
+        android:name="com.jine.espressotalk.ui.pokemonlist.compose.PokemonListComposeFragment"
+        android:label="PokemonListComposeFragment" />
 </navigation>
