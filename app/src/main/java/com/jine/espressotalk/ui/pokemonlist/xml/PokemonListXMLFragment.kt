@@ -48,6 +48,11 @@ class PokemonListXMLFragment : Fragment() {
         setupData()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewModel.resetFilters()
+    }
+
     private fun setupMenu() {
         (requireActivity() as MenuHost).addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {

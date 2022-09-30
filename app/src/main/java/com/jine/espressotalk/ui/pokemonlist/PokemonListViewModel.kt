@@ -49,6 +49,12 @@ class PokemonListViewModel : ViewModel() {
         updateLists()
     }
 
+    fun resetFilters() {
+        currentSearchText = ""
+        showOnlyFavorite = false
+        updateLists()
+    }
+
     private fun updateLists() {
         finalList = rawList
             // Search
