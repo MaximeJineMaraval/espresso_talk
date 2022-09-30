@@ -57,7 +57,7 @@ class PokemonAdapter(
                 when (pokemon.isFavorite()) {
                     true -> {
                         setImageResource(R.drawable.ic_favorite_filled)
-                        setColorFilter(ContextCompat.getColor(context, R.color.pokemon_red))
+                        setColorFilter(ContextCompat.getColor(context, R.color.pokemon_red_dark))
                     }
                     false -> {
                         setImageResource(R.drawable.ic_favorite_outlined)
