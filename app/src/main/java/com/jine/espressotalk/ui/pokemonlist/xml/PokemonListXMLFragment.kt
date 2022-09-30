@@ -1,4 +1,4 @@
-package com.jine.espressotalk.ui.xml
+package com.jine.espressotalk.ui.pokemonlist.xml
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,14 +9,21 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.divider.MaterialDividerItemDecoration
+import com.google.android.material.transition.MaterialSharedAxis
 import com.jine.espressotalk.databinding.FragmentPokemonListBinding
-import com.jine.espressotalk.ui.PokemonListState
-import com.jine.espressotalk.ui.PokemonListViewModel
+import com.jine.espressotalk.ui.pokemonlist.PokemonListState
+import com.jine.espressotalk.ui.pokemonlist.PokemonListViewModel
 
 class PokemonListXMLFragment : Fragment() {
 
     private val viewModel: PokemonListViewModel by viewModels(ownerProducer = { requireActivity() })
     private lateinit var binding: FragmentPokemonListBinding
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true)
+        returnTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

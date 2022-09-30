@@ -1,4 +1,4 @@
-package com.jine.espressotalk.ui
+package com.jine.espressotalk.ui.pokemonlist
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

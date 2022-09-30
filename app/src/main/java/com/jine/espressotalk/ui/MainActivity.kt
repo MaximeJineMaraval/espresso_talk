@@ -1,11 +1,11 @@
-package com.jine.espressotalk
+package com.jine.espressotalk.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
+import com.jine.espressotalk.R
 import com.jine.espressotalk.databinding.ActivityMainBinding
 
-// TODO: rajouter une petite animation entre les écrans (voir dans Vitamin)
 // TODO: rajouter une barre de recherche
 // TODO: (pas sur) rajouter une action sur le click d'un pokemon (une popup avec quelques détails ? autre ?)
 // TODO: Ecrire les tests UI XML

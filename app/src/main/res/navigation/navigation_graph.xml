@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.jine.espressotalk.MainFragment"
+        android:name="com.jine.espressotalk.ui.MainFragment"
         android:label="MainFragment">
         <action
             android:id="@+id/action_mainFragment_to_pokemonListXMLFragment2"
@@ -14,6 +14,6 @@
     </fragment>
     <fragment
         android:id="@+id/pokemonListXMLFragment"
-        android:name="com.jine.espressotalk.ui.xml.PokemonListXMLFragment"
+        android:name="com.jine.espressotalk.ui.pokemonlist.xml.PokemonListXMLFragment"
         android:label="PokemonListXMLFragment" />
 </navigation>

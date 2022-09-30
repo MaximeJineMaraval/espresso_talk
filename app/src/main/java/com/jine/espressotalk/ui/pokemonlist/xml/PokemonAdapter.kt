@@ -1,4 +1,4 @@
-package com.jine.espressotalk.ui.xml
+package com.jine.espressotalk.ui.pokemonlist.xml
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -41,6 +41,7 @@ class PokemonAdapter : RecyclerView.Adapter<PokemonAdapter.PokemonViewHolder>() 
         private val binding: ItemPokemonBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
+        @SuppressLint("SetTextI18n")
         fun bind(pokemon: PokemonModel) {
             binding.name.text = pokemon.name
             binding.details.text = "${pokemon.type}\n${pokemon.heightAndWeight}"
