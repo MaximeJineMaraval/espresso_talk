@@ -14,11 +14,55 @@ class PokemonListViewModel : ViewModel() {
     private val _screenState: MutableLiveData<PokemonListState> = MutableLiveData()
     val screenState: LiveData<PokemonListState> = _screenState
 
+    private var rawList: List<PokemonModel> = emptyList()
+    private var finalList: List<PokemonModel> = emptyList()
+        set(value) {
+            field = value
+            _screenState.postValue(PokemonListState.Success(value))
+        }
+    private var currentSearchText: String = ""
+    private var showOnlyFavorite: Boolean = false
+
     init {
         _screenState.postValue(PokemonListState.Loading)
         viewModelScope.launch(Dispatchers.IO) {
-            _screenState.postValue(PokemonListState.Success(PokemonRepository().getAll()))
+            val pokemons = PokemonRepository().getAll()
+            rawList = pokemons
+            finalList = pokemons
         }
+    }
+
+    fun performSearch(text: String) {
+        currentSearchText = text
+        updateLists()
+    }
+
+    fun makeAsFavorite(pokemonNumber: Int) {
+        rawList = rawList.apply {
+            find { it.number == pokemonNumber }?.toggleFavorite()
+        }
+        updateLists()
+    }
+
+    fun showOnlyFavorite(show: Boolean) {
+        showOnlyFavorite = show
+        updateLists()
+    }
+
+    private fun updateLists() {
+        finalList = rawList
+            // Search
+            .filter { pokemon ->
+                pokemon.name.contains(currentSearchText, ignoreCase = true)
+                        || pokemon.type.contains(currentSearchText, ignoreCase = true)
+                // Favorite
+            }.filter {
+                if (showOnlyFavorite) {
+                    it.isFavorite()
+                } else {
+                    true
+                }
+            }
     }
 }
 

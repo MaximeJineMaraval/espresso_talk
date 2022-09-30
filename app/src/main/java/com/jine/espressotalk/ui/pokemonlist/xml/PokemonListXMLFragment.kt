@@ -1,15 +1,18 @@
 package com.jine.espressotalk.ui.pokemonlist.xml
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import androidx.appcompat.widget.SearchView
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import com.google.android.material.transition.MaterialSharedAxis
+import com.jine.espressotalk.R
 import com.jine.espressotalk.databinding.FragmentPokemonListBinding
 import com.jine.espressotalk.ui.pokemonlist.PokemonListState
 import com.jine.espressotalk.ui.pokemonlist.PokemonListViewModel
@@ -18,6 +21,9 @@ class PokemonListXMLFragment : Fragment() {
 
     private val viewModel: PokemonListViewModel by viewModels(ownerProducer = { requireActivity() })
     private lateinit var binding: FragmentPokemonListBinding
+    private val pokemonAdapter = PokemonAdapter(onPokemonClicked = { pokemonNumber ->
+        viewModel.makeAsFavorite(pokemonNumber)
+    })
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,8 +42,66 @@ class PokemonListXMLFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val pokemonAdapter = PokemonAdapter()
-        setupList(pokemonAdapter)
+        setupMenu()
+        setupList()
+        setupSearch()
+        setupData()
+    }
+
+    private fun setupMenu() {
+        (requireActivity() as MenuHost).addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.menu_list, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when (menuItem.itemId) {
+                    R.id.favorite -> {
+                        menuItem.isChecked = menuItem.isChecked.not()
+                        menuItem.setIcon(
+                            if (menuItem.isChecked) {
+                                R.drawable.ic_favorite_filled
+                            } else {
+                                R.drawable.ic_favorite_outlined
+                            }
+                        )
+                        viewModel.showOnlyFavorite(menuItem.isChecked)
+                        true
+                    }
+                    else -> false
+                }
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+    }
+
+    private fun setupList() {
+        binding.list.apply {
+            layoutManager = LinearLayoutManager(this.context, RecyclerView.VERTICAL, false)
+            adapter = pokemonAdapter
+            addItemDecoration(
+                MaterialDividerItemDecoration(
+                    this.context,
+                    MaterialDividerItemDecoration.VERTICAL
+                )
+            )
+        }
+    }
+
+    private fun setupSearch() {
+        binding.search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                viewModel.performSearch(query ?: "")
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                viewModel.performSearch(newText ?: "")
+                return true
+            }
+        })
+    }
+
+    private fun setupData() {
         viewModel.screenState.observe(viewLifecycleOwner) { uiState ->
             when (uiState) {
                 is PokemonListState.Loading -> {
@@ -50,19 +114,6 @@ class PokemonListXMLFragment : Fragment() {
                     pokemonAdapter.pokemons = uiState.pokemons
                 }
             }
-        }
-    }
-
-    private fun setupList(pokemonAdapter: PokemonAdapter) {
-        binding.list.apply {
-            layoutManager = LinearLayoutManager(this.context, RecyclerView.VERTICAL, false)
-            adapter = pokemonAdapter
-            addItemDecoration(
-                MaterialDividerItemDecoration(
-                    this.context,
-                    MaterialDividerItemDecoration.VERTICAL
-                )
-            )
         }
     }
 }

@@ -7,7 +7,14 @@ data class PokemonModel(
     val type: String,
     private val height: Int,
     private val weight: Int,
+    private var favorite: Boolean = false
 ) {
     val heightAndWeight: String =
         "${String.format("%.1f", height * 0.1)} m, ${String.format("%.1f", weight * 0.1)} kg"
+
+    fun toggleFavorite() {
+        favorite = favorite.not()
+    }
+
+    fun isFavorite(): Boolean = favorite
 }
