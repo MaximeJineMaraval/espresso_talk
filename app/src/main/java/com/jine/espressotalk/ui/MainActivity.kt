@@ -10,7 +10,6 @@ import com.jine.espressotalk.databinding.ActivityMainBinding
 
 // TODO: Cleaner le fichier gradle
 
-// TODO: faire l'écran Compose
 // TODO: Ecrire les tests UI Compose
 class MainActivity : AppCompatActivity() {
 

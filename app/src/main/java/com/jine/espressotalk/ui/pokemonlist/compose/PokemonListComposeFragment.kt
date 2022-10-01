@@ -6,6 +6,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -32,6 +33,7 @@ import coil.request.ImageRequest
 import com.google.android.material.transition.MaterialSharedAxis
 import com.jine.espressotalk.R
 import com.jine.espressotalk.data.model.PokemonModel
+import com.jine.espressotalk.ui.extensions.HideKeyboardOnScroll
 import com.jine.espressotalk.ui.pokemonlist.PokemonListState
 import com.jine.espressotalk.ui.pokemonlist.PokemonListViewModel
 import com.jine.espressotalk.ui.theme.PokemonComposeTheme
@@ -165,7 +167,11 @@ class PokemonListComposeFragment : Fragment() {
         pokemons: List<PokemonModel>,
         onFavoriteClick: (pokemonNumber: Int) -> Unit
     ) {
-        LazyColumn(modifier = Modifier.fillMaxSize(), content = {
+        val listState = rememberLazyListState()
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            state = listState,
+            content = {
             items(pokemons) {
                 PokemonItem(pokemon = it, onFavoriteClick = {
                     onFavoriteClick(it.number)
@@ -173,6 +179,7 @@ class PokemonListComposeFragment : Fragment() {
                 Divider()
             }
         })
+        HideKeyboardOnScroll(listState = listState)
     }
 
     @Composable

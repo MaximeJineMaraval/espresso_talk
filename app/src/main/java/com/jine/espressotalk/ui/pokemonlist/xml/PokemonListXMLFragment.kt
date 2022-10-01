@@ -14,6 +14,7 @@ import com.google.android.material.divider.MaterialDividerItemDecoration
 import com.google.android.material.transition.MaterialSharedAxis
 import com.jine.espressotalk.R
 import com.jine.espressotalk.databinding.FragmentPokemonListBinding
+import com.jine.espressotalk.ui.extensions.closeKeyboardOnScroll
 import com.jine.espressotalk.ui.pokemonlist.PokemonListState
 import com.jine.espressotalk.ui.pokemonlist.PokemonListViewModel
 
@@ -89,6 +90,7 @@ class PokemonListXMLFragment : Fragment() {
                     MaterialDividerItemDecoration.VERTICAL
                 )
             )
+            closeKeyboardOnScroll()
         }
     }
 
