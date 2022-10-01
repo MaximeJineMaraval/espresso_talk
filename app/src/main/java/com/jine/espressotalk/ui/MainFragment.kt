@@ -17,7 +17,7 @@ class MainFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         exitTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true)
-        reenterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, /* forward= */ false)
+        reenterTransition = MaterialSharedAxis(MaterialSharedAxis.Z,false)
     }
 
     override fun onCreateView(

@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolBar)
         findNavController(R.id.nav_host_fragment).addOnDestinationChangedListener { _, destination, _ ->
             title = when (destination.id) {
-                R.id.mainFragment -> "Home"
+                R.id.mainFragment -> "Pokemon"
                 R.id.pokemonListXMLFragment -> "XML List"
                 R.id.pokemonListComposeFragment -> "Compose List"
                 else -> ""
