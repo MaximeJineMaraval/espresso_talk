@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jine.espressotalk.data.model.PokemonModel
 import com.jine.espressotalk.data.repository.PokemonRepository
+import com.jine.espressotalk.tests.EspressoIdlingResource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -25,11 +26,13 @@ class PokemonListViewModel : ViewModel() {
     private var showOnlyFavorite: Boolean = false
 
     init {
+        EspressoIdlingResource.increment()
         _screenState.postValue(PokemonListState.Loading)
         viewModelScope.launch(Dispatchers.IO) {
             val pokemons = PokemonRepository().getAll()
             rawList = pokemons
             finalList = pokemons
+            EspressoIdlingResource.decrement()
         }
     }
 

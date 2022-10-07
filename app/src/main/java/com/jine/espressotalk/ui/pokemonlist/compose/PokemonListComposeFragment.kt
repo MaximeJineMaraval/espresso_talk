@@ -9,7 +9,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -19,6 +22,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
@@ -33,6 +37,7 @@ import coil.request.ImageRequest
 import com.google.android.material.transition.MaterialSharedAxis
 import com.jine.espressotalk.R
 import com.jine.espressotalk.data.model.PokemonModel
+import com.jine.espressotalk.tests.TestTags
 import com.jine.espressotalk.ui.extensions.HideKeyboardOnScroll
 import com.jine.espressotalk.ui.pokemonlist.PokemonListState
 import com.jine.espressotalk.ui.pokemonlist.PokemonListViewModel
@@ -85,7 +90,7 @@ class PokemonListComposeFragment : Fragment() {
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
-                    R.id.favorite -> {
+                    R.id.topBarFavorite -> {
                         menuItem.isChecked = menuItem.isChecked.not()
                         menuItem.setIcon(
                             if (menuItem.isChecked) {
@@ -128,7 +133,9 @@ class PokemonListComposeFragment : Fragment() {
             mutableStateOf(TextFieldValue(""))
         }
         OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(TestTags.SearchBar),
             value = searchState.value,
             onValueChange = {
                 searchState.value = it
@@ -169,16 +176,18 @@ class PokemonListComposeFragment : Fragment() {
     ) {
         val listState = rememberLazyListState()
         LazyColumn(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .testTag(TestTags.PokemonList),
             state = listState,
             content = {
-            items(pokemons) {
-                PokemonItem(pokemon = it, onFavoriteClick = {
-                    onFavoriteClick(it.number)
-                })
-                Divider()
-            }
-        })
+                items(pokemons) {
+                    PokemonItem(pokemon = it, onFavoriteClick = {
+                        onFavoriteClick(it.number)
+                    })
+                    Divider()
+                }
+            })
         HideKeyboardOnScroll(listState = listState)
     }
 
@@ -210,7 +219,9 @@ class PokemonListComposeFragment : Fragment() {
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(text = "${pokemon.type}\n${pokemon.heightAndWeight}")
             }
-            IconButton(onClick = { onFavoriteClick() }) {
+            IconButton(
+                modifier = Modifier.testTag(TestTags.getFavoriteItemIcon(pokemon.name)),
+                onClick = { onFavoriteClick() }) {
                 Image(
                     modifier = Modifier
                         .size(42.dp)

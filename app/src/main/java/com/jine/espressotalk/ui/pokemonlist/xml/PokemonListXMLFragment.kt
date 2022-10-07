@@ -62,7 +62,7 @@ class PokemonListXMLFragment : Fragment() {
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
-                    R.id.favorite -> {
+                    R.id.topBarFavorite -> {
                         menuItem.isChecked = menuItem.isChecked.not()
                         menuItem.setIcon(
                             if (menuItem.isChecked) {
