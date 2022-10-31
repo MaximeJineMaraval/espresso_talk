@@ -1,48 +1,43 @@
 package com.jine.espressotalk.ui.pokemonlist.compose
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.runtime.*
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material.Card
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.ViewCompositionStrategy
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.view.MenuHost
-import androidx.core.view.MenuProvider
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.google.android.material.transition.MaterialSharedAxis
-import com.jine.espressotalk.R
 import com.jine.espressotalk.data.model.PokemonModel
-import com.jine.espressotalk.tests.TestTags
-import com.jine.espressotalk.ui.extensions.HideKeyboardOnScroll
 import com.jine.espressotalk.ui.pokemonlist.PokemonListState
 import com.jine.espressotalk.ui.pokemonlist.PokemonListViewModel
 import com.jine.espressotalk.ui.theme.PokemonComposeTheme
-import com.jine.espressotalk.ui.theme.PokemonRedDark
 
 class PokemonListComposeFragment : Fragment() {
 
@@ -72,94 +67,18 @@ class PokemonListComposeFragment : Fragment() {
         }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setupMenu()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        viewModel.resetFilters()
-    }
-
-    private fun setupMenu() {
-        (requireActivity() as MenuHost).addMenuProvider(object : MenuProvider {
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                menuInflater.inflate(R.menu.menu_list, menu)
-            }
-
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                return when (menuItem.itemId) {
-                    R.id.topBarFavorite -> {
-                        menuItem.isChecked = menuItem.isChecked.not()
-                        menuItem.setIcon(
-                            if (menuItem.isChecked) {
-                                R.drawable.ic_favorite_filled
-                            } else {
-                                R.drawable.ic_favorite_outlined
-                            }
-                        )
-                        viewModel.showOnlyFavorite(menuItem.isChecked)
-                        true
-                    }
-                    else -> false
-                }
-            }
-        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
-    }
-
     @Composable
     private fun Screen() {
         val screenState by viewModel.screenState.observeAsState()
-        Column(modifier = Modifier.fillMaxSize()) {
-            SearchBar(performSearch = {
-                viewModel.performSearch(it)
-            })
-            Divider()
+        Box(modifier = Modifier.fillMaxSize()) {
             when (screenState) {
                 is PokemonListState.Loading -> Loading()
                 is PokemonListState.Success -> PokemonList(
-                    pokemons = (screenState as PokemonListState.Success).pokemons,
-                    onFavoriteClick = { viewModel.toggleFavorite(it) }
+                    pokemons = (screenState as PokemonListState.Success).pokemons
                 )
                 else -> {}
             }
         }
-    }
-
-    @Composable
-    private fun SearchBar(performSearch: (text: String) -> Unit) {
-        val searchState: MutableState<TextFieldValue> = remember {
-            mutableStateOf(TextFieldValue(""))
-        }
-        OutlinedTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(TestTags.SearchBar),
-            value = searchState.value,
-            onValueChange = {
-                searchState.value = it
-                performSearch(it.text)
-            },
-            placeholder = {
-                Text(text = "Rechercher par nom ou type...")
-            }, leadingIcon = {
-                Icon(imageVector = Icons.Default.Search, contentDescription = null)
-            }, trailingIcon = {
-                if (searchState.value.text.isNotBlank()) {
-                    IconButton(onClick = {
-                        searchState.value = TextFieldValue("")
-                        performSearch("")
-                    }) {
-                        Icon(imageVector = Icons.Default.Clear, contentDescription = null)
-                    }
-                }
-            },
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = Color.Transparent,
-                unfocusedBorderColor = Color.Transparent
-            )
-        )
     }
 
     @Composable
@@ -171,67 +90,61 @@ class PokemonListComposeFragment : Fragment() {
 
     @Composable
     private fun PokemonList(
-        pokemons: List<PokemonModel>,
-        onFavoriteClick: (pokemonNumber: Int) -> Unit
+        pokemons: List<PokemonModel>
     ) {
-        val listState = rememberLazyListState()
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .testTag(TestTags.PokemonList),
-            state = listState,
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+            contentPadding = PaddingValues(8.dp),
             content = {
                 items(pokemons) {
-                    PokemonItem(pokemon = it, onFavoriteClick = {
-                        onFavoriteClick(it.number)
-                    })
-                    Divider()
+                    PokemonItem2(pokemon = it)
                 }
             })
-        HideKeyboardOnScroll(listState = listState)
     }
 
     @Composable
-    private fun PokemonItem(pokemon: PokemonModel, onFavoriteClick: () -> Unit) {
-        Row(
+    private fun PokemonItem2(pokemon: PokemonModel) {
+        Card(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
+                .aspectRatio(4 / 3f)
+                .padding(8.dp),
+            shape = MaterialTheme.shapes.large,
         ) {
-            // Image
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(pokemon.imageUrl)
-                    .crossfade(true)
-                    .build(),
-                contentDescription = null,
-                modifier = Modifier.size(72.dp)
-            )
-            // Texts
-            Column(
-                modifier = Modifier
-                    .padding(start = 16.dp)
-                    .weight(1.0f)
-            ) {
-                // Name
-                Text(text = pokemon.name, fontSize = 18.sp, fontWeight = FontWeight.Bold)
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(text = "${pokemon.type}\n${pokemon.heightAndWeight}")
-            }
-            IconButton(
-                modifier = Modifier.testTag(TestTags.getFavoriteItemIcon(pokemon.name)),
-                onClick = { onFavoriteClick() }) {
-                Image(
-                    modifier = Modifier
-                        .size(42.dp)
-                        .padding(8.dp),
-                    imageVector = if (pokemon.isFavorite()) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                    colorFilter = ColorFilter.tint(if (pokemon.isFavorite()) PokemonRedDark else Color.Black),
-                    contentDescription = null
+            ConstraintLayout(modifier = Modifier.background(color = Color(pokemon.backgroundColor))) {
+                val (name, details, image) = createRefs()
+
+                Text(
+                    text = pokemon.name,
+                    color = Color.Black,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.constrainAs(name) {
+                        start.linkTo(parent.start, margin = 16.dp)
+                        top.linkTo(parent.top, margin = 16.dp)
+                    })
+
+                Text(
+                    text = "${pokemon.type}\n${pokemon.heightAndWeight}",
+                    color = Color.Black,
+                    fontSize = 11.sp,
+
+                    modifier = Modifier.constrainAs(details) {
+                        top.linkTo(name.bottom, margin = 4.dp)
+                        start.linkTo(name.start)
+                        end.linkTo(image.start, margin = 8.dp)
+                        width = Dimension.fillToConstraints
+                    }
                 )
+                Image(
+                    bitmap = pokemon.imageBitmap.asImageBitmap(),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(72.dp)
+                        .constrainAs(image) {
+                            bottom.linkTo(parent.bottom, margin = 8.dp)
+                            end.linkTo(parent.end, margin = 8.dp)
+                        })
             }
         }
     }
-
 }

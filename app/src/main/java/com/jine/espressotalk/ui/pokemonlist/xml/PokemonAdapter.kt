@@ -1,18 +1,21 @@
 package com.jine.espressotalk.ui.pokemonlist.xml
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toBitmap
+import androidx.palette.graphics.Palette
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
-import com.jine.espressotalk.R
+import coil.imageLoader
+import coil.request.ImageRequest
 import com.jine.espressotalk.data.model.PokemonModel
 import com.jine.espressotalk.databinding.ItemPokemonBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
-class PokemonAdapter(
-    val onPokemonClicked: (pokemonNumber: Int) -> Unit
-) : RecyclerView.Adapter<PokemonAdapter.PokemonViewHolder>() {
+class PokemonAdapter : RecyclerView.Adapter<PokemonAdapter.PokemonViewHolder>() {
 
     var pokemons: List<PokemonModel> = emptyList()
         @SuppressLint("NotifyDataSetChanged")
@@ -49,26 +52,8 @@ class PokemonAdapter(
         fun bind(pokemon: PokemonModel) {
             binding.name.text = pokemon.name
             binding.details.text = "${pokemon.type}\n${pokemon.heightAndWeight}"
-            binding.image.load(pokemon.imageUrl) {
-                crossfade(true)
-            }
-            binding.favorite.apply {
-                setOnClickListener { onPokemonClicked(pokemon.number) }
-                when (pokemon.isFavorite()) {
-                    true -> {
-                        setImageResource(R.drawable.ic_favorite_filled)
-                        setColorFilter(ContextCompat.getColor(context, R.color.pokemon_red_dark))
-                    }
-                    false -> {
-                        setImageResource(R.drawable.ic_favorite_outlined)
-                        setColorFilter(ContextCompat.getColor(context, android.R.color.black))
-                    }
-                }
-            }
-
-            binding.favorite.setImageResource(
-                if (pokemon.isFavorite()) R.drawable.ic_favorite_filled else R.drawable.ic_favorite_outlined
-            )
+            binding.image.setImageBitmap(pokemon.imageBitmap)
+            binding.cardContainer.setBackgroundColor(pokemon.backgroundColor)
         }
     }
 }
