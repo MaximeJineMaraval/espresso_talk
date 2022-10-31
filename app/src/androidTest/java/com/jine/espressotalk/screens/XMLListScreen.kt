@@ -5,7 +5,7 @@ import androidx.test.espresso.contrib.RecyclerViewActions.scrollTo
 import androidx.test.espresso.matcher.ViewMatchers.*
 import com.jine.espressotalk.R
 import com.jine.espressotalk.internal.Pokemon
-import com.jine.espressotalk.ui.pokemonlist.xml.PokemonAdapter
+import com.jine.espressotalk.ui.trainercreator.xml.PokemonAdapter
 
 class XMLListScreen {
 

@@ -1,4 +1,4 @@
-package com.jine.espressotalk.ui.pokemonlist.xml
+package com.jine.espressotalk.ui.trainercreator.xml
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,19 +6,24 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.transition.MaterialSharedAxis
 import com.jine.espressotalk.databinding.FragmentPokemonListBinding
-import com.jine.espressotalk.ui.extensions.closeKeyboardOnScroll
-import com.jine.espressotalk.ui.pokemonlist.PokemonListState
-import com.jine.espressotalk.ui.pokemonlist.PokemonListViewModel
+import com.jine.espressotalk.ui.trainercreator.PokemonListState
+import com.jine.espressotalk.ui.trainercreator.PokemonListViewModel
+import com.jine.espressotalk.ui.trainercreator.TrainerCreatorViewModel
 
-class PokemonListXMLFragment : Fragment() {
+class XMLPokemonListFragment : Fragment() {
 
-    private val viewModel: PokemonListViewModel by viewModels(ownerProducer = { requireActivity() })
+    private val listViewModel: PokemonListViewModel by viewModels(ownerProducer = { requireActivity() })
+    private val creatorViewModel: TrainerCreatorViewModel by viewModels(ownerProducer = { requireActivity() })
     private lateinit var binding: FragmentPokemonListBinding
-    private val pokemonAdapter = PokemonAdapter()
+    private val pokemonAdapter = PokemonAdapter(onPokemonClicked = { name ->
+        creatorViewModel.updatePokemonName(name)
+        findNavController().popBackStack()
+    })
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,12 +50,11 @@ class PokemonListXMLFragment : Fragment() {
         binding.list.apply {
             layoutManager = GridLayoutManager(this.context, 2, RecyclerView.VERTICAL, false)
             adapter = pokemonAdapter
-            closeKeyboardOnScroll()
         }
     }
 
     private fun setupData() {
-        viewModel.screenState.observe(viewLifecycleOwner) { uiState ->
+        listViewModel.screenState.observe(viewLifecycleOwner) { uiState ->
             when (uiState) {
                 is PokemonListState.Loading -> {
                     binding.list.visibility = View.GONE

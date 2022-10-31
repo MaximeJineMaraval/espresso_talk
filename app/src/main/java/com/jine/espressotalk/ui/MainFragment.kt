@@ -36,10 +36,10 @@ class MainFragment : Fragment() {
 
     private fun setupButtons() {
         binding.xmlButton.setOnClickListener {
-            findNavController().navigate(R.id.pokemonListXMLFragment)
+            findNavController().navigate(R.id.XMLTrainerCreatorFragment)
         }
         binding.composeButton.setOnClickListener {
-            findNavController().navigate(R.id.pokemonListComposeFragment)
+            findNavController().navigate(R.id.ComposeTrainerCreatorFragment)
         }
     }
 

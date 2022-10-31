@@ -9,18 +9,35 @@
         android:name="com.jine.espressotalk.ui.MainFragment"
         android:label="MainFragment">
         <action
-            android:id="@+id/action_mainFragment_to_pokemonListXMLFragment2"
-            app:destination="@id/pokemonListXMLFragment" />
+            android:id="@+id/action_mainFragment_to_XMLTrainerCreator"
+            app:destination="@id/XMLTrainerCreatorFragment" />
         <action
-            android:id="@+id/action_mainFragment_to_pokemonListComposeFragment"
-            app:destination="@id/pokemonListComposeFragment" />
+            android:id="@+id/action_mainFragment_to_ComposeTrainerCreator"
+            app:destination="@id/ComposeTrainerCreatorFragment" />
     </fragment>
     <fragment
-        android:id="@+id/pokemonListXMLFragment"
-        android:name="com.jine.espressotalk.ui.pokemonlist.xml.PokemonListXMLFragment"
-        android:label="PokemonListXMLFragment" />
+        android:id="@+id/XMLTrainerCreatorFragment"
+        android:name="com.jine.espressotalk.ui.trainercreator.xml.XMLTrainerCreatorFragment"
+        android:label="XMLTrainerCreatorFragment">
+        <action
+            android:id="@+id/action_trainerCreator_to_pokemonList"
+            app:destination="@id/XMLPokemonListFragment" />
+    </fragment>
     <fragment
-        android:id="@+id/pokemonListComposeFragment"
-        android:name="com.jine.espressotalk.ui.pokemonlist.compose.PokemonListComposeFragment"
-        android:label="PokemonListComposeFragment" />
+        android:id="@+id/ComposeTrainerCreatorFragment"
+        android:name="com.jine.espressotalk.ui.trainercreator.compose.ComposeTrainerCreatorFragment"
+        android:label="ComposeTrainerCreatorFragment">
+        <action
+            android:id="@+id/action_trainerCreator_to_pokemonList"
+            app:destination="@id/ComposePokemonListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/XMLPokemonListFragment"
+        android:name="com.jine.espressotalk.ui.trainercreator.xml.XMLPokemonListFragment"
+        android:label="XMLPokemonListFragment" />
+    <fragment
+        android:id="@+id/ComposePokemonListFragment"
+        android:name="com.jine.espressotalk.ui.trainercreator.compose.ComposePokemonListFragment"
+        android:label="ComposePokemonList
+        Fragment" />
 </navigation>

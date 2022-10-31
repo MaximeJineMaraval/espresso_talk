@@ -1,4 +1,4 @@
-package com.jine.espressotalk.ui.pokemonlist
+package com.jine.espressotalk.ui.trainercreator
 
 import android.app.Application
 import androidx.compose.runtime.toMutableStateList

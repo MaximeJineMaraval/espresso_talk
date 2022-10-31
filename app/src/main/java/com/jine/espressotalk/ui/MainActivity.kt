@@ -6,11 +6,6 @@ import androidx.navigation.findNavController
 import com.jine.espressotalk.R
 import com.jine.espressotalk.databinding.ActivityMainBinding
 
-// TODO: Ecrire les tests UI XML
-
-// TODO: Cleaner le fichier gradle
-
-// TODO: Ecrire les tests UI Compose
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
@@ -31,14 +26,12 @@ class MainActivity : AppCompatActivity() {
         findNavController(R.id.nav_host_fragment).addOnDestinationChangedListener { _, destination, _ ->
             title = when (destination.id) {
                 R.id.mainFragment -> "Pokemon"
-                R.id.pokemonListXMLFragment -> "XML List"
-                R.id.pokemonListComposeFragment -> "Compose List"
+                R.id.XMLTrainerCreatorFragment -> "XML Trainer Creator"
+                R.id.XMLPokemonListFragment -> "XML Pokemon List"
+                R.id.ComposePokemonListFragment -> "Compose Pokemon List"
                 else -> ""
             }
-            supportActionBar?.setDisplayHomeAsUpEnabled(
-                destination.id == R.id.pokemonListXMLFragment
-                        || destination.id == R.id.pokemonListComposeFragment
-            )
+            supportActionBar?.setDisplayHomeAsUpEnabled(destination.id != R.id.mainFragment)
         }
     }
 

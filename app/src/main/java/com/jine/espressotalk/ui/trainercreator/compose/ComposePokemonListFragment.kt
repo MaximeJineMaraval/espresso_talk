@@ -1,4 +1,4 @@
-package com.jine.espressotalk.ui.pokemonlist.compose
+package com.jine.espressotalk.ui.trainercreator.compose
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,10 +10,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material.Card
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -22,7 +19,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
@@ -32,18 +28,19 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.transition.MaterialSharedAxis
 import com.jine.espressotalk.data.model.PokemonModel
 import com.jine.espressotalk.tests.TestTags
-import com.jine.espressotalk.ui.pokemonlist.PokemonListState
-import com.jine.espressotalk.ui.pokemonlist.PokemonListViewModel
 import com.jine.espressotalk.ui.theme.PokemonComposeTheme
+import com.jine.espressotalk.ui.trainercreator.PokemonListState
+import com.jine.espressotalk.ui.trainercreator.PokemonListViewModel
+import com.jine.espressotalk.ui.trainercreator.TrainerCreatorViewModel
 
-class PokemonListComposeFragment : Fragment() {
+class ComposePokemonListFragment : Fragment() {
 
-    private val viewModel: PokemonListViewModel by viewModels(ownerProducer = { requireActivity() })
+    private val listViewModel: PokemonListViewModel by viewModels(ownerProducer = { requireActivity() })
+    private val trainerCreatorViewModel: TrainerCreatorViewModel by viewModels(ownerProducer = { requireActivity() })
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,7 +68,7 @@ class PokemonListComposeFragment : Fragment() {
 
     @Composable
     private fun Screen() {
-        val screenState by viewModel.screenState.observeAsState()
+        val screenState by listViewModel.screenState.observeAsState()
         Box(modifier = Modifier.fillMaxSize()) {
             when (screenState) {
                 is PokemonListState.Loading -> Loading()
@@ -105,9 +102,14 @@ class PokemonListComposeFragment : Fragment() {
             })
     }
 
+    @OptIn(ExperimentalMaterialApi::class)
     @Composable
     private fun PokemonItem(pokemon: PokemonModel) {
         Card(
+            onClick = {
+                trainerCreatorViewModel.updatePokemonName(pokemon.name)
+                findNavController().popBackStack()
+            },
             modifier = Modifier
                 .aspectRatio(4 / 3f)
                 .padding(8.dp),

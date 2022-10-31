@@ -1,21 +1,14 @@
-package com.jine.espressotalk.ui.pokemonlist.xml
+package com.jine.espressotalk.ui.trainercreator.xml
 
 import android.annotation.SuppressLint
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.graphics.drawable.toBitmap
-import androidx.palette.graphics.Palette
 import androidx.recyclerview.widget.RecyclerView
-import coil.imageLoader
-import coil.request.ImageRequest
 import com.jine.espressotalk.data.model.PokemonModel
 import com.jine.espressotalk.databinding.ItemPokemonBinding
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
-class PokemonAdapter : RecyclerView.Adapter<PokemonAdapter.PokemonViewHolder>() {
+class PokemonAdapter(private val onPokemonClicked: (pokemonName: String) -> Unit) :
+    RecyclerView.Adapter<PokemonAdapter.PokemonViewHolder>() {
 
     var pokemons: List<PokemonModel> = emptyList()
         @SuppressLint("NotifyDataSetChanged")
@@ -54,6 +47,7 @@ class PokemonAdapter : RecyclerView.Adapter<PokemonAdapter.PokemonViewHolder>() 
             binding.details.text = "${pokemon.type}\n${pokemon.heightAndWeight}"
             binding.image.setImageBitmap(pokemon.imageBitmap)
             binding.cardContainer.setBackgroundColor(pokemon.backgroundColor)
+            binding.card.setOnClickListener { onPokemonClicked(pokemon.name) }
         }
     }
 }
