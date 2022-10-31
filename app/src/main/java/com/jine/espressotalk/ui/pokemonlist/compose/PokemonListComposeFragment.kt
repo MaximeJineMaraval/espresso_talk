@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -35,6 +36,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.google.android.material.transition.MaterialSharedAxis
 import com.jine.espressotalk.data.model.PokemonModel
+import com.jine.espressotalk.tests.TestTags
 import com.jine.espressotalk.ui.pokemonlist.PokemonListState
 import com.jine.espressotalk.ui.pokemonlist.PokemonListViewModel
 import com.jine.espressotalk.ui.theme.PokemonComposeTheme
@@ -93,17 +95,18 @@ class PokemonListComposeFragment : Fragment() {
         pokemons: List<PokemonModel>
     ) {
         LazyVerticalGrid(
+            modifier = Modifier.testTag(TestTags.PokemonList),
             columns = GridCells.Fixed(2),
             contentPadding = PaddingValues(8.dp),
             content = {
                 items(pokemons) {
-                    PokemonItem2(pokemon = it)
+                    PokemonItem(pokemon = it)
                 }
             })
     }
 
     @Composable
-    private fun PokemonItem2(pokemon: PokemonModel) {
+    private fun PokemonItem(pokemon: PokemonModel) {
         Card(
             modifier = Modifier
                 .aspectRatio(4 / 3f)
