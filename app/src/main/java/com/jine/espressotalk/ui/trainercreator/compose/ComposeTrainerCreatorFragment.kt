@@ -8,7 +8,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,8 +17,8 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
@@ -25,6 +26,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.transition.MaterialSharedAxis
 import com.jine.espressotalk.R
+import com.jine.espressotalk.tests.TestTags
 import com.jine.espressotalk.ui.theme.PokemonComposeTheme
 import com.jine.espressotalk.ui.trainercreator.TrainerCreatorViewModel
 
@@ -87,6 +89,7 @@ class ComposeTrainerCreatorFragment : Fragment() {
     private fun TrainerNameField() {
         val trainerName by viewModel.trainerName.observeAsState()
         TextField(
+            modifier = Modifier.testTag(TestTags.trainerNameField),
             value = trainerName ?: "",
             onValueChange = {
                 viewModel.updateTrainerName(it)
@@ -102,18 +105,24 @@ class ComposeTrainerCreatorFragment : Fragment() {
             value = pokemonName ?: "",
             onValueChange = {},
             placeholder = { Text("Starter pokemon") },
-            modifier = Modifier.onFocusChanged {
-                if (it.isFocused) {
-                    findNavController().navigate(R.id.ComposePokemonListFragment)
-                }
-            },
+            modifier = Modifier
+                .testTag(TestTags.starterPokemonNameField)
+                .onFocusChanged {
+                    if (it.isFocused) {
+                        findNavController().navigate(R.id.ComposePokemonListFragment)
+                    }
+                },
         )
     }
 
     @Composable
     private fun CreateButton() {
         val isButtonEnabled by viewModel.isCreateButtonEnabled.observeAsState()
-        Button(onClick = {}, enabled = isButtonEnabled ?: false) {
+        Button(
+            modifier = Modifier.testTag(TestTags.createTrainerButton),
+            onClick = {},
+            enabled = isButtonEnabled ?: false
+        ) {
             Text(text = "CREATE TRAINER")
         }
     }

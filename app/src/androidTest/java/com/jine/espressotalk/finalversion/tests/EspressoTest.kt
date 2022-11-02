@@ -1,12 +1,10 @@
-package com.jine.espressotalk.tests
+package com.jine.espressotalk.finalversion.tests
 
 import androidx.test.espresso.IdlingRegistry
-import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.jine.espressotalk.tests.EspressoIdlingResource
 import org.junit.After
 import org.junit.Before
-import org.junit.runner.RunWith
 
-@RunWith(AndroidJUnit4::class)
 abstract class EspressoTest {
 
     @Before

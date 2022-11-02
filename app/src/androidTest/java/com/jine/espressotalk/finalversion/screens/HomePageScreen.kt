@@ -1,4 +1,4 @@
-package com.jine.espressotalk.screens
+package com.jine.espressotalk.finalversion.screens
 
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
